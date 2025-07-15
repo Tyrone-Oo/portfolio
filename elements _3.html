@@ -1,0 +1,208 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title> Tyrone - Projects</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="#intro">Welcome</a></li>
+							<li><a href="#one">Who Am I </a></li>
+							<li><a href="#two">My Projects</a></li>
+							<li><a href="#three">Get in touch</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+				<!-- Text -->
+				<!-- Main -->
+
+												<section id="main" class="wrapper">
+												<div class="inner">
+													<li><a href="index.html" class="button"> Home </a></li>
+													<h1 class="major"> SQL Project on customer churn</h1>
+								<section>
+									<h2>Introduction</h2>
+									<p>
+In today’s competitive telecom market, customer churn—when users discontinue their service—remains a critical concern. With an industry churn rate ranging from 15% to 25%, retaining customers is not just a priority; it's a strategic necessity. Since acquiring new customers is significantly more expensive than retaining existing ones, businesses need to proactively identify which customers are most at risk of leaving.
+
+This project focuses on using data-driven insights to understand why customers churn and how businesses can anticipate and reduce attrition. By analyzing a range of customer behaviors—such as service usage, demographics, and engagement channels—we aim to uncover patterns that drive churn and help inform targeted retention strategies..</p>
+
+								<hr/>	<h2>🔍 Key Analytical Questions</h2>
+									<li>What proportion of customers have churned vs. those who remain active?</li>
+
+									<li>Are there any churn trends by gender, age, or tenure?</li>
+
+									<li>Which services or contract types are most associated with churned customers?</li>
+
+									<li>What are the most profitable services, and how do they relate to churn?</li>
+
+									<li>Which customer features or behaviors most strongly predict churn?</li>
+
+These insights will help guide personalized retention efforts, improve resource allocation, and enhance long-term customer loyalty strategies.</p>
+									<hr />
+									<h2> Preparation</h2>
+									<p>1.SQL Snippet: Checking table names from the database
+										<pre><code>SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES</code></pre>
+									<p>Query Result:</p>
+									<img src="images/schema.jpg" alt="SQL query output table">
+
+
+									</p>
+									<hr />
+									<p>2.SQL Snippet: Checking column names and data type</p>
+									<pre><code>SELECT COLUMN_NAME, DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'Customer-Churn';
+
+  </code></pre>
+									<h3>Query Result:</h3>
+<img src="images/columns.jpg" alt="SQL query output table">
+
+									<hr />
+									<p>3.SQL Snippet: Checking Null </p>
+									<pre><code> SELECT COUNT(*) AS 'NUMBER OF NULLS'  FROM [Customer-Churn] WHERE TotalCharges IS NULL;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/NULL.jpg" alt="SQL query output table">
+<br> <br>
+<p> After deep analysis on each columns for null values, I found out that there were 11  rows with null so decided to delete them.</p>
+
+							<pre><code>DELETE FROM [Customer-Churn]
+WHERE TotalCharges IS NULL;</code></pre>
+									<h3>Query Result:</h3>
+<img src="images/DeletingNulls.jpg" alt="SQL query output table">
+									<br><br>
+									<p> and check again .. </p>
+									<pre><code>SELECT COUNT(*) AS 'NUMBER OF NULLS'  FROM [Customer-Churn] WHERE TotalCharges IS NULL;</code></pre>
+									<h3>Query Result:</h3>
+<img src="images/zeronull.jpg" alt="SQL query output table">
+									<hr/>
+									<p>4.SQL Snippet: Checking Duplicates </p>
+									<pre><code>SELECT customerID,  COUNT(*) AS Duplicate
+FROM [Customer-Churn]
+GROUP BY customerID
+HAVING COUNT(*) > 1;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/zeroduplicate.jpg" alt="SQL query output table">
+									<hr/>
+									<h2> Exploratory Analysis </h2>
+									<p>5.SQL Snippet: Proportion of Churn </p>
+									<pre><code>SELECT Churn, count(*) AS Numbers FROM [Customer-Churn] group by Churn;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/Churntotal.jpg" alt="SQL query output table">
+
+									<br><br>
+									<p>Churn Proportion </p>
+									<pre><code>SELECT (cast (Count(*) AS float) / (SELECT COUNT (*) FROM [Customer-Churn])) * 100 AS Churn_Percentage
+FROM [Customer-Churn] where Churn =  'Yes';</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/ChurnPercentage.jpg" alt="SQL query output table">
+
+
+								<hr/>
+									<p>6.SQL Snippet: Tenure Vs Churn analysis </p>
+									<pre><code>WITH MyGroup AS (SELECT tenure,Churn,
+CASE
+  WHEN tenure <= 12 THEN '1 yrs'
+  WHEN tenure > 12 AND tenure<= 24 THEN '2 yrs'
+  WHEN tenure > 24 AND tenure<= 36 THEN '3 yrs'
+  WHEN tenure > 36 AND tenure<= 48 THEN '4 yrs'
+  WHEN tenure > 48 AND tenure<= 60 THEN '5 yrs'
+  WHEN tenure > 60 AND tenure<= 72 THEN '6 yrs'
+
+  ELSE 'Most royal'
+END AS TenureGroup FROM [Customer-Churn])
+SELECT TenureGroup,
+count (CASE WHEN Churn= 'Yes' THEN 1 ELSE NULL END) AS Churn_yes,
+count (CASE WHEN Churn = 'No' THEN 1 ELSE NULL END) AS Churn_no
+FROM MyGroup group by TenureGroup order by TenureGroup;
+</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/tenureandchurn.jpg" alt="SQL query output table">
+
+									<hr/>
+									<p>7.SQL Snippet: Gender and Churn relationship </p>
+									<pre><code>SELECT Churn,
+count (CASE WHEN gender= 'male' THEN 1 ELSE NULL END) AS Male,
+count (CASE WHEN gender = 'female' THEN 1 ELSE NULL END) AS Female
+FROM [Customer-Churn]
+group by Churn;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/genderandchurn.jpg" alt="SQL query output table">
+
+									<hr/>
+									<p>8.SQL Snippet: Contract type and Churn relationship </p>
+									<pre><code>SELECT Contract,
+COUNT (CASE WHEN Churn = 'Yes' THEN 1 ELSE NULL END) AS 'Churn-Yes',
+COUNT (CASE WHEN Churn = 'No' THEN 1 ELSE NULL END) AS 'Churn-No'
+FROM [Customer-Churn] GROUP BY Contract;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/contracttype.jpg" alt="SQL query output table">
+
+									<hr/>
+									<p>9.SQL Snippet: Services and Churn relationship </p>
+									<pre><code>SELECT churn,
+COUNT (CASE WHEN PhoneService = 'Yes' THEN 1 ELSE NULL END) AS PhoneService,
+COUNT (CASE WHEN OnlineSecurity = 'Yes' THEN 1 ELSE NULL END) AS OnlineSecurity,
+COUNT (CASE WHEN MultipleLines = 'Yes' THEN 1 ELSE NULL END) AS MultipleLines,
+COUNT (CASE WHEN OnlineBackup = 'Yes' THEN 1 ELSE NULL END) AS OnlineBackup,
+COUNT (CASE WHEN DeviceProtection = 'Yes' THEN 1 ELSE NULL END) AS DeviceProtection,
+COUNT (CASE WHEN TechSupport = 'Yes' THEN 1 ELSE NULL END) AS TechSupport,
+COUNT (CASE WHEN StreamingTV = 'Yes' THEN 1 ELSE NULL END) AS StreamingTV,
+COUNT (CASE WHEN StreamingMovies = 'Yes' THEN 1 ELSE NULL END) AS StreamingMovies
+FROM [Customer-Churn] GROUP BY Churn;</code></pre>
+										<h3>Query Result:</h3>
+<img src="images/serviceschurn.jpg" alt="SQL query output table">
+
+
+
+
+
+
+
+
+
+
+								</section>
+
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
